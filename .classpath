@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/GosuTools"/>
+	<classpathentry kind="lib" path="lib/beaglebuddy_mp3/jar/beaglebuddy_mp3.jar" sourcepath="lib/beaglebuddy_mp3/src"/>
+	<classpathentry kind="lib" path="lib/swt.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

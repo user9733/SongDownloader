@@ -1,0 +1,68 @@
+<project name="mp3" default="all">
+
+     <!-- set global properties for this build -->
+     <property name="class_dir"           value="classes"/>
+     <property name="debug"               value="on"/>
+     <property name="images_dir"          value="images"/>
+     <property name="jar_dir"             value="jar"/>
+     <property name="jar_file_classes"    value="${jar_dir}/beaglebuddy_mp3.jar"/>
+     <property name="jar_file_javadocs"   value="${jar_dir}/beaglebuddy_mp3_javadocs.zip"/>
+     <property name="jar_file_source"     value="${jar_dir}/beaglebuddy_mp3_source.zip"/>
+     <property name="javadoc_dir"         value="javadocs"/>
+     <property name="src_dir"             value="src"/>
+     <property name="zip_file"            value="${jar_dir}/beaglebuddy_mp3.zip"/>
+
+
+     <!-- .................................................................. -->
+     <target name="all" depends="jar, javadocs">
+          <zip destfile="${zip_file}">
+             <fileset dir="." includes="build.xml"/>
+             <fileset dir="." includes="${src_dir}/**/*"/>
+             <fileset dir="." includes="${jar_file_classes}"/>
+             <fileset dir="." includes="${javadoc_dir}/**/*"/>
+             <fileset dir=".">
+                <include name="${images_dir}/**/*"/>
+                <exclude name="${images_dir}/javadocs_index.html"/>
+             </fileset>
+          </zip>
+     </target>
+
+     <!-- .................................................................. -->
+     <target name="classes">
+          <javac srcdir="${src_dir}" destdir="${class_dir}" classpath="${classpath}" debug="${debug}" deprecation="on" failonerror="true" includeantruntime="true">
+               <compilerarg value="-Xlint:all"/>
+          </javac>
+     </target>
+
+     <!-- .................................................................. -->
+     <target name="clean">
+          <delete dir ="${class_dir}/com"/>
+          <mkdir  dir="${class_dir}"     />
+          <delete dir="${jar_dir}"       />
+          <mkdir  dir="${jar_dir}"       />
+          <delete dir="${javadoc_dir}"   />
+          <mkdir  dir="${javadoc_dir}"   />
+     </target>
+
+     <!-- .................................................................. -->
+     <target name="javadocs">
+          <copy file="${images_dir}/beaglebuddy_software_logo.gif" todir="${javadoc_dir}/resources" overwrite="true"/>
+          <copy file="${images_dir}/mp3_format.gif"                todir="${javadoc_dir}/resources" overwrite="true"/>
+          <copy file="${images_dir}/id3v2.gif"                     todir="${javadoc_dir}/resources" overwrite="true"/>
+          <javadoc sourcepath="${src_dir}"  destdir="${javadoc_dir}" classpath="${class_dir}" excludepackagenames="com.beaglebuddy.mp3.sample_code" stylesheetfile="${images_dir}/stylesheet.css" linksource="no" Windowtitle="Beaglebuddy Software's MP3 Library Documentation">
+               <doctitle><![CDATA[<img src="resources/beaglebuddy_software_logo.gif" width="340" height="110"/><br/>MP3 Library Documentation]]></doctitle>
+          </javadoc>
+          <copy file="${images_dir}/javadocs_index.html" tofile="${javadoc_dir}/index.html" overwrite="true"/>
+          <zip destfile="${jar_file_javadocs}" basedir="${javadoc_dir}" update="false"/>
+     </target>
+
+     <!-- .................................................................. -->
+     <target name="jar" depends="classes">
+          <jar destfile="${jar_file_classes}" basedir="${class_dir}" excludes="com/beaglebuddy/mp3/sample_code,com/beaglebuddy/mp3/sample_code/**/*.class" update="false"/>
+          <zip destfile="${jar_file_source}">
+             <fileset dir="." includes="${images_dir}/**/*"/>
+             <fileset dir="." includes="${src_dir}/**/*"/>
+             <fileset dir="." includes="build.xml"/>
+          </zip>
+     </target>
+</project>
