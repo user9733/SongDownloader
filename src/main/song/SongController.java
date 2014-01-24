@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import main.SongDownloader;
 import main.WebPageReader;
@@ -43,7 +45,14 @@ public class SongController implements ISongUpdateListener{
 				songName = title.substring(dashIndex+1).trim();
 				log("About to download: "+artist+" - "+songName);
 			}else{
-				songName = title;
+				Pattern pattern = Pattern.compile("(.+) by (.+)");
+				Matcher matcher = pattern.matcher(title);
+				if (matcher.find()){
+					songName = matcher.group(0);
+					songName = matcher.group(1);
+				}else{
+					songName = title;
+				}
 			}
 			song = new Song(songName,artist,"","","","");
 			song.addSongUpdateListener(this);
@@ -71,15 +80,23 @@ public class SongController implements ISongUpdateListener{
 				songName = string.substring(dashIndex+1).trim();
 				log("About to download: "+artist+" - "+songName);
 			}else{
-				String title = getTitleFromYoutubeLink(url);
-				title = title.replace("\t"," - ");
-				dashIndex = title.indexOf("-");
-				if (dashIndex>0){
-					artist = title.substring(0,dashIndex-1).trim();
-					songName = title.substring(dashIndex+1).trim();
-					log("About to download: "+artist+" - "+songName);
+				String title = "";
+				Pattern pattern = Pattern.compile("(.+) by (.+)");
+				Matcher matcher = pattern.matcher(string);
+				if (matcher.find()){
+					songName = matcher.group(1);
+					title = matcher.group(2);
 				}else{
-					songName = title;
+					title = getTitleFromYoutubeLink(url);
+					title = title.replace("\t"," - ");
+					dashIndex = title.indexOf("-");
+					if (dashIndex>0){
+						artist = title.substring(0,dashIndex-1).trim();
+						songName = title.substring(dashIndex+1).trim();
+						log("About to download: "+artist+" - "+songName);
+					}else{
+						songName = title;
+					}
 				}
 			}
 			song = new Song(songName,artist,"","","","");
